@@ -1,4 +1,6 @@
 function saveToLocalStorage(pokemonName: string) {
+    if (typeof window === 'undefined') return;
+
     let favoritesListArr = getFromLocalStorage();
 
     if (!favoritesListArr.includes(pokemonName)) {
@@ -9,6 +11,7 @@ function saveToLocalStorage(pokemonName: string) {
 }
 
 function getFromLocalStorage() {
+    if (typeof window === 'undefined') return [];
     let localStorageData = localStorage.getItem('Favorites');
 
     if (localStorageData == null) {
@@ -19,6 +22,7 @@ function getFromLocalStorage() {
 }
 
 function removeFromLocalStorage(inputPokemonName: string) {
+    if (typeof window === 'undefined') return;
     let localStorageData = getFromLocalStorage();
 
     let idToRemove = localStorageData.indexOf(inputPokemonName);
@@ -26,8 +30,4 @@ function removeFromLocalStorage(inputPokemonName: string) {
     localStorageData.splice(idToRemove, 1);
 
     localStorage.setItem('Favorites', JSON.stringify(localStorageData));
-    // if(inputPokemonName == pokemonName.innerText) {
-    //     addToFavoritesBtn.classList.add("grayscale");
-    //     addToFavoritesBtn.classList.add("opacity-50");
-    // }
 }
