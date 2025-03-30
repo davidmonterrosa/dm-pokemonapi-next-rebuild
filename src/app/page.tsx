@@ -1,6 +1,4 @@
 import PokemonDisplayArea from "@/components/PokemonDisplayArea";
-import Image from "next/image";
-import PokemonBg from "../../public/assets/images/Pokemon_Background.jpg"
 
 export default function Home() {
   return (

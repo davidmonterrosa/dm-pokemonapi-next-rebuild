@@ -114,9 +114,13 @@ const PokemonDisplayArea = () => {
     }
 
     const addToFavorites = () => {
-        saveToLocalStorage(pokemonData.name)
-        setFavoritesList(getFromLocalStorage)
-        setFavoritesTotal(favoritesTotal + 1)
+        if(favoritesList.includes(pokemonData.name)) {
+            deleteFavoriteItem(pokemonData.name)            
+        } else {
+            saveToLocalStorage(pokemonData.name)
+            setFavoritesList(getFromLocalStorage)
+            setFavoritesTotal(favoritesTotal + 1)
+        }
     }
 
     useEffect(() => {
