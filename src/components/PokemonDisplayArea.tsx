@@ -4,9 +4,8 @@ import { Input } from './ui/input'
 import { Button } from './ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog'
 import { getEvolutionChain, getLocationData, getPokemon } from '@/services/pokemon-services'
+import { saveToLocalStorage, getFromLocalStorage, removeFromLocalStorage } from '@/services/local-storage'
 import { PokemonData } from '@/interfaces/pokemon-data-interface'
-import { url } from 'inspector'
-import { EncounterData } from '@/interfaces/encounter-data'
 
 const PokemonDisplayArea = () => {
     const [searchString, setSearchString] = useState<string>("");
@@ -65,6 +64,7 @@ const PokemonDisplayArea = () => {
     const [evolutionImages, setEvolutionImages] = useState<string[][]>([])
     const [isShiny, setIsShiny] = useState<boolean>(false);
     const [favoritesList, setFavoritesList] = useState<string[]>([]);
+    const [favoritesTotal, setFavoritesTotal] = useState<number>(0);
 
 
     const getPokemonAbilitiesList = (inputArray: {ability: {name: string, url: string}}[]) => {
@@ -99,6 +99,12 @@ const PokemonDisplayArea = () => {
         setSearchString(`${randomId}`);
     }
 
+    const deleteFavoriteItem = (nameOfPokemon: string) => {
+        removeFromLocalStorage(nameOfPokemon)
+        setFavoritesList(getFromLocalStorage)
+        setFavoritesTotal(favoritesTotal - 1)
+    }
+
     // const handleSearchOnclick = () => {
     //     // I need help with this function.
     // }
@@ -107,12 +113,10 @@ const PokemonDisplayArea = () => {
         setIsShiny(!isShiny);
     }
 
-    const addToFavorites = (pokemonName: string) => {
-
-    }
-
-    const getPokemonTypes = (inputPokemon: PokemonData) => {
-
+    const addToFavorites = () => {
+        saveToLocalStorage(pokemonData.name)
+        setFavoritesList(getFromLocalStorage)
+        setFavoritesTotal(favoritesTotal + 1)
     }
 
     useEffect(() => {
@@ -138,6 +142,8 @@ const PokemonDisplayArea = () => {
         const onLoadDisplay = async () => {
             setPokemonData(await getPokemon(1))
             setLocationData(await getLocationData(1))
+            setFavoritesList(getFromLocalStorage)
+            setFavoritesTotal(1);
         }
         onLoadDisplay();
     }, [])
@@ -150,6 +156,10 @@ const PokemonDisplayArea = () => {
         }
         fetchAdditionalData();
     }, [pokemonData])
+
+    useEffect(() => {
+        setFavoritesList(getFromLocalStorage)
+    }, [favoritesTotal])
 
   return (
     <div className='grid grid-cols-5 grid-rows-8 gap-5'>
@@ -178,8 +188,18 @@ const PokemonDisplayArea = () => {
                         </DialogTitle>
                     </DialogHeader>
                     <hr />
-                    <div id='favoritesArea'>
+                    <div>
                         {/* Favorite Cards go here */}
+                        {
+                            favoritesList.map((pokemon, index) => (
+                                <div key={index} className='rounded-full bg-[#D9D9D9] flex justify-between items-center py-4 px-5'>
+                                    <Button className='text-black montserratFont bg-transparent hover:bg-[#FFFFFF26] rounded-full p-0 cursor-pointer' onClick={() => setSearchString(pokemon)}>{pokemon}</Button>
+                                    <Button className='bg-transparent hover:bg-[#FFFFFF26] rounded-full p-0 cursor-pointer' onClick={() => deleteFavoriteItem(pokemon)}>
+                                        <img className='size-12' src="/assets/icons/delete.png" alt="remove pokemon button" />
+                                    </Button>
+                                </div>
+                            ))
+                        }
                     </div>
                 </DialogContent>
             </Dialog>
@@ -199,7 +219,7 @@ const PokemonDisplayArea = () => {
             :
             (<>
                 <section className={`flex justify-between items-center`}>
-                    <Button className='bg-transparent hover:bg-[#FFFFFF26] rounded-full p-0 cursor-pointer' onClick={() => addToFavorites("TemporaryValue")}>
+                    <Button className='bg-transparent hover:bg-[#FFFFFF26] rounded-full p-0 cursor-pointer' onClick={addToFavorites}>
                         <img className={`w-[1.563rem] h-[1.563rem] md:w-[3.125rem] md:h-[3.125rem] ${favoritesList.includes(pokemonData.name) ? null : 'grayscale opacity-50'}`} src="/assets/icons/pokeball.png" alt="Pokeball Icon" />
                     </Button>
                     <p>{`#${pokemonData.id}`}</p>
@@ -223,13 +243,24 @@ const PokemonDisplayArea = () => {
                         <div>
                             {/* Type List Area */}
                             <div className="flex justify-center mt-3">
-                            {/* {
-                                pokemonData.past_types.length > 0 ? 
-                                pokemonData.past_types.map((elementType, index) => {console.log(elementType)})
-                                :
-                                pokemonData.types.map((elementType, index) => (console.log(elementType))) 
+                            {
 
-                            } */}
+                                pokemonData != null && pokemonData.types.length > 0 ?
+                                    (<div className={`flex justify-center items-center border rounded-full py-1.5 px-2.5 ${pokemonData.types[0].type.name}`}>
+                                        <p>{pokemonData.types[0].type.name}</p>
+                                    </div>)
+                                    :
+                                    null
+                                }
+                                {
+                                pokemonData != null && pokemonData.types.length > 1 ?
+                                    (<div className={`justify-center items-center border rounded-full py-1.5 px-2.5 ${pokemonData.types[1].type.name}`}>
+                                        <p>{pokemonData.types[1].type.name}</p>
+                                    </div>)
+                                    :
+                                    null
+                                }
+
                             </div>
                         </div>
                     </div>
