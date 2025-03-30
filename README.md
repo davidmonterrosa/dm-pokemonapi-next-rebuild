@@ -27,5 +27,5 @@ Create a single page pokemon application using the Pokemonapi and Next.JS / Type
 
 
 
-Peer Reviewed By: 
-> Comments: 
+Peer Reviewed By: Charles Orr
+> Comments: Your project looks amazing and functions perfectly, only things i can say are that the 1st and final evolutions have scroll bars next to them and, at least on my monitor, the screen has some scroll to it, aside from that its perfect, great job, keep up the great work :)
