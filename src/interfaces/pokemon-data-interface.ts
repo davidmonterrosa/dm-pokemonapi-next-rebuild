@@ -20,7 +20,9 @@ export interface PokemonData {
         }
         types: TypeArray[]
     }[]
-    species: {}
+    species: {
+        url: string        
+    }
     sprites: {
         back_default: string
         back_female: string

@@ -7,7 +7,6 @@ export const getPokemon = async (nameOrId: string | number) => {
     //     return "error";
     // }
     const data: PokemonData = await response.json();
-    console.log(data);
     return data;
 }
 
@@ -20,4 +19,47 @@ export const getLocationData = async (inputIdNumber: number) => {
     } else {
         return "N/A";
     }
+}
+
+export const getEvolutionChain = async (inputSpeciesUrl: string) => {
+    let imageArr: string[][] = [];
+    let arr:string [] = [];
+    let thirdEvoArr: string[] = [];
+    const response = await fetch(inputSpeciesUrl);
+    const speciesData = await response.json();
+    console.log(speciesData.evolution_chain.url);
+    const evolutionChainUrl = speciesData.evolution_chain.url;
+    const evolutionChainResponse = await fetch(evolutionChainUrl);
+    const evolutionChain = await evolutionChainResponse.json();
+    console.log(evolutionChain);
+    const firstEvolution = await getPokemon(evolutionChain.chain.species.name);
+    if(firstEvolution != null) {
+        imageArr.push([`${firstEvolution.sprites.other["official-artwork"].front_default}`]);
+
+        if(evolutionChain.chain.evolves_to.length == 0) {
+            return imageArr;
+        } else {
+            for(let i = 0; i < evolutionChain.chain.evolves_to.length; i++) {
+                const secondEvolution = await getPokemon(evolutionChain.chain.evolves_to[i].species.name);
+                if(secondEvolution.id <= 649) {
+                    arr.push(`${secondEvolution.sprites.other["official-artwork"].front_default}`)
+                }
+                if(evolutionChain.chain.evolves_to[i].evolves_to.length != 0) {
+                    for(let j = 0; j < evolutionChain.chain.evolves_to[i].evolves_to.length; j++) {
+                        const thirdEvolution = await getPokemon(evolutionChain.chain.evolves_to[i].evolves_to[j].species.name);
+                        if(thirdEvolution.id <= 649) {
+                            thirdEvoArr.push(`${thirdEvolution.sprites.other["official-artwork"].front_default}`);
+                        }
+                    }
+                }
+            }
+        }
+        imageArr.push(arr);
+        if(thirdEvoArr.length == 0){
+            return imageArr;
+        } else{
+            imageArr.push(thirdEvoArr);
+        }
+    } 
+    return imageArr;
 }
