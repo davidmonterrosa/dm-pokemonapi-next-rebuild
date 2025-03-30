@@ -9,7 +9,7 @@ import { PokemonData } from '@/interfaces/pokemon-data-interface'
 
 const PokemonDisplayArea = () => {
     const [searchString, setSearchString] = useState<string>("");
-    const [outOfBounds, setOutOfBounds] = useState<boolean>(false);
+    // const [outOfBounds, setOutOfBounds] = useState<boolean>(false);
     const [notFound, setNotFound] = useState<boolean>(false);
     const [pokemonData, setPokemonData] = useState<PokemonData>({
         abilities: [],
@@ -40,15 +40,11 @@ const PokemonDisplayArea = () => {
             front_shiny: "",
             front_shiny_female: "",
             other: {
-                dream_world: {},
-                home: {},
                 "official-artwork": {
                     front_default: "",
                     front_shiny: "",
                 },
-                showdown: {},
             },
-            versions: {},
         },        
         stats: [],
         types: [{
@@ -68,7 +64,7 @@ const PokemonDisplayArea = () => {
 
 
     const getPokemonAbilitiesList = (inputArray: {ability: {name: string, url: string}}[]) => {
-        let tempArray = [];
+        const tempArray = [];
         for(let i: number = 0; i < inputArray.length; i++)
         {
             tempArray.push(inputArray[i].ability.name)
@@ -77,7 +73,7 @@ const PokemonDisplayArea = () => {
     }
 
     const getPokemonMovesList = (inputArray: {move: {name: string, url: string}}[]) => {
-        let tempArray: string[] = [];
+        const tempArray: string[] = [];
         for(let i: number = 0; i < inputArray.length; i++)
         {
             tempArray.push(inputArray[i].move.name)
@@ -130,9 +126,9 @@ const PokemonDisplayArea = () => {
                 setNotFound(false);
                 if(rawData.id <= 649) {
                     setPokemonData(rawData);
-                    setOutOfBounds(false);
+                    // setOutOfBounds(false);
                 } else {
-                    setOutOfBounds(true);
+                    // setOutOfBounds(true);
                 }
             } else {
                 setNotFound(true);

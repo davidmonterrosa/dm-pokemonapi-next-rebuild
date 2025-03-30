@@ -14,7 +14,7 @@ export const getLocationData = async (inputIdNumber: number) => {
     const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${inputIdNumber}/encounters`);
     const data: EncounterData[] = await response.json();
     if(data.length > 0) {
-        let locationString = data[0].location_area.name;
+        const locationString = data[0].location_area.name;
         return locationString;
     } else {
         return "N/A";
@@ -22,9 +22,9 @@ export const getLocationData = async (inputIdNumber: number) => {
 }
 
 export const getEvolutionChain = async (inputSpeciesUrl: string) => {
-    let imageArr: string[][] = [];
-    let arr:string [] = [];
-    let thirdEvoArr: string[] = [];
+    const imageArr: string[][] = [];
+    const arr:string [] = [];
+    const thirdEvoArr: string[] = [];
     const response = await fetch(inputSpeciesUrl);
     const speciesData = await response.json();
     console.log(speciesData.evolution_chain.url);

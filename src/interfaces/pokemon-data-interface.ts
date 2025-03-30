@@ -33,15 +33,11 @@ export interface PokemonData {
         front_shiny: string
         front_shiny_female: string
         other: {
-            dream_world: {}
-            home: {}
             "official-artwork": {
                 front_default: string
                 front_shiny: string
             }
-            showdown: {}
         }
-        versions: {}
     }
     stats: []
     types: TypeArray[]
